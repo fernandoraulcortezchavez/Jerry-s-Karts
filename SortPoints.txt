@@ -1,0 +1,48 @@
+import random
+
+class Punto:
+    def __init__(self,x,y,right=None,left=None):
+        assert type(x) is float or int
+        assert type(y) is float or int
+        self.x = x
+        self.y = y
+        self.right = self
+        self.left = self
+
+    def __repr__(self):
+        return "({0},{1})".format(self.x,self.y)
+
+    def __lt__(self,other):
+        return self.x < other.x
+
+    def SortByY(self):
+        return self.y
+
+def puntosAlAzar(cuantos):
+    resultado = []
+    salieronX = []
+    salieronY = []
+
+    for i in range(cuantos):
+        x = random.randint(-100,100)
+        while x in salieronX:
+            x = random.randint(-100,100)
+        salieronX.append(x)
+
+        y = random.randint(-100,100)
+        while y in salieronY:
+            y = random.randint(-100,100)
+        salieronY.append(y)
+
+        resultado.append(Punto(x,y))
+        
+    return resultado
+
+m = puntosAlAzar(5)
+coorX = sorted(m)
+coorY = sorted(m, key=Punto.SortByY)
+
+print(m)
+print(coorX)
+print(coorY)
+
