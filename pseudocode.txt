@@ -1,0 +1,47 @@
+def carritosJerry(distancia, listaPuntos):
+	listaHorizontal = ordenarPuntosPorCoordenadaX(listaPuntos)
+	listaVertical = ordenarPuntosPorCoordenadaY(listaPuntos)
+	
+	#Llamar el método buscador de distancia especificada
+	hayCarritosCerca(distancia, listaHorizontal, listaVertical)
+
+
+##Método auxiliar
+def hayCarritosCerca(distancia, listaX, listaY)
+	#Partir a la mitad la listaX
+	listaXIzq = listaX[0:n//2]
+	listaXDer = listaX[n//2:]
+
+	##Encontrar la línea horizontal que divide a la mitad la lista original:
+	divisor = promedio(listaXIzq[n//2 - 1], listaXDer[n//2])
+
+	##Partir a la mitad la listaY, los que están a la izquierda del divisor y los que están a la derecha
+	listaYIzq, listaYDer = partirMitad(listaX, divisor)
+
+	##Llamar el método con cada mitad de las listas horizontal y vertical originales
+	resultadoIzq = hayCarritosCerca(distancia, listaXIzq, listaYIzq)
+	resultadoDer = hayCarritosCerca(distancia, listaXDer, listaYDer)
+
+	##Revisar si no se encontró el par de carritos en alguna mitad
+	if resultadoIzq != False:
+		return resultadoIzq
+	elif resultadoDer != False:
+		return resultadoDer
+	else:
+		##Aplicar el "merge" de las mitades. Se deberá revisar cada punto de la izq con algunos de la 
+
+derecha
+		return merge(distancia, listaY)
+
+##Método auxiliar 2
+def merge(distancia, listaY)
+	##Primero se deben desechar los que estén a más de "distancia" unidades horizontalmente de la linea
+	listaYIzqCerca = desechaPuntosLejos(divisor, listaY)
+
+	#Por cada punto en listaY, se revisará su distancia con los siguientes 7 puntos
+	###CODIGO PARA LO ANTERIOR
+
+	if encontrado
+		return parejaEncontrada
+	else
+		return False
