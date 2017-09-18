@@ -1,0 +1,137 @@
+import random
+
+##Clase Punto
+class Punto:
+    def __init__(self,x,y,right=None,left=None):
+        assert type(x) is float or int
+        assert type(y) is float or int
+        self.x = x
+        self.y = y
+        self.right = self
+        self.left = self
+
+    def __repr__(self):
+        return "({0},{1})".format(self.x,self.y)
+
+    def __lt__(self,other):
+        return self.x < other.x
+
+    def SortByY(self):
+        return self.y
+
+##Función para sacar la distancia entre dos puntos
+def distanciaPuntos(p1, p2):
+    return ((p2.y - p1.y)**2 + (p2.x - p1.x)**2 )**0.5
+
+##Función que genera puntos al azar
+def puntosAlAzar(cuantos):
+    resultado = []
+    salieronX = []
+    salieronY = []
+
+    for i in range(cuantos):
+        x = random.randint(-100,100)
+        while x in salieronX:
+            x = random.randint(-100,100)
+        salieronX.append(x)
+
+        y = random.randint(-100,100)
+        while y in salieronY:
+            y = random.randint(-100,100)
+        salieronY.append(y)
+
+        resultado.append(Punto(x,y))
+        
+    return resultado
+
+##Función principal que resuelve el problema propuesto
+def carritosJerry(distancia, listaPuntos):
+    listaHori = sorted(listaPuntos)
+    listaVer = sorted(listaPuntos, key=Punto.SortByY)
+        
+    return hayCarritosCerca(distancia, listaHori, listaVer)
+
+##Función auxiliar
+##Función recursiva para encontrar dos carritos cerca por una distancia especificada
+def hayCarritosCerca(distancia, listaX, listaY):
+    ##Caso base
+    if len(listaX) <= 1:
+        return False
+
+    else:
+        #Partir la lista horizontal a la mitad
+        n = len(listaX)//2
+        
+        listaXIzq = listaX[0:n]
+        listaXDer = listaX[n:]
+
+        #Encontrar la línea vertical que divide al conjunto de puntos
+        divisor = (listaXIzq[n-1].x + listaXDer[0].x)/2
+        
+        ##Dividir en dos mitades la lista ordenada por coordenada Y
+        ##Revisando si su coordenada x es a la derecha o izquierda del divisor
+        listaYIzq = []
+        listaYDer = []
+
+        for p in listaY:
+            if p.x >= divisor:
+                listaYDer.append(p)
+            else:
+                listaYIzq.append(p)
+
+        ##Aplicar recursivamente el método a las mitades derecha e izquierda
+        resultadoIzq = hayCarritosCerca(distancia, listaXIzq, listaYIzq)
+        resultadoDer = hayCarritosCerca(distancia, listaXDer, listaYDer)
+        
+        if resultadoIzq != False:
+            return resultadoIzq
+        
+        elif resultadoDer != False:
+            return resultadoDer
+        
+        else:
+            return merge(distancia, divisor, listaY)
+
+##Función auxiliar
+##Función que remueve los puntos a más de "distancia" unidades de divisor
+def quitarPuntosLejos(lista,divisor,distancia):
+    cercanos = []
+    for i in range(len(lista)):
+        if (abs(divisor-lista[i].x)) <= distancia:
+            cercanos.append(lista[i])
+
+    return cercanos
+
+##Función auxiliar
+##Función que revisa la distancia de los puntos más cercanos a la línea central
+def merge(distancia, divisor, listaY):
+    ##Primero se deben tomar solamente los puntos a lo mucho a "distancia"
+    ##de la línea central
+    stripY = quitarPuntosLejos(listaY, divisor, distancia)
+
+    ##Comparar para cada punto su distancia con los siguientes 7 de la lista
+    n = len(stripY)
+    for i in range(n):
+        for j in range(i+1,i+7):
+            j = j%n #Para ciclar a los primeros valores de la lista
+            if distanciaPuntos(stripY[i], stripY[j]) <= distancia and i != j:
+                return [stripY[i],stripY[j]]
+
+    ##Ninguna pareja cercana encontrada
+    return False
+
+#####MAIN#########
+##Genera puntos y aplica el método imprimiendo el resultado 
+def problema(cuantosPuntos, distancia):
+    m = puntosAlAzar(cuantosPuntos)
+    print("Puntos generados:")
+    for p in m:
+        print(p, end=' ')
+    dibujaPuntos(m)
+    r = carritosJerry(10, m)
+    print("\nResultado:")
+    if r != False:
+        print(r, "Distancia:", distanciaPuntos(r[0],r[1]))
+    else:
+        print(r)
+    return
