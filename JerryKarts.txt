@@ -1,0 +1,105 @@
+import random
+
+class Punto:
+    def __init__(self,x,y,right=None,left=None):
+        assert type(x) is float or int
+        assert type(y) is float or int
+        self.x = x
+        self.y = y
+        self.right = self
+        self.left = self
+
+    def __repr__(self):
+        return "({0},{1})".format(self.x,self.y)
+
+    def __lt__(self,other):
+        return self.x < other.x
+
+    def SortByY(self):
+        return self.y
+
+def puntosAlAzar(cuantos):
+    resultado = []
+    salieronX = []
+    salieronY = []
+
+    for i in range(cuantos):
+        x = random.randint(-100,100)
+        while x in salieronX:
+            x = random.randint(-100,100)
+        salieronX.append(x)
+
+        y = random.randint(-100,100)
+        while y in salieronY:
+            y = random.randint(-100,100)
+        salieronY.append(y)
+
+        resultado.append(Punto(x,y))
+        
+    return resultado
+
+def carritosJerry(distancia, listaPuntos):
+    listaHori = sorted(listaPuntos)
+    listaVer = sorted(listaPuntos, key=Punto.SortByY)
+    
+    hayCarritosCerca(distancia, listaHori, listaVer)
+
+def hayCarritosCerca(distancia, listaX, listaY):
+
+    if len(listaX) <= 1:
+        return False
+
+    else:
+        n = len(listaX)//2
+
+        listaXIzq = listaX[0:n]
+        print(listaXIzq)
+        
+        listaXDer = listaX[n:]
+        print(listaXDer)
+        
+        divisor = (listaXIzq[n-1].x + listaXDer[0].x)/2
+        #print(divisor)
+        
+        listaYIzq = []
+        listaYDer = []
+
+        for p in listaY:
+            if p.x >= divisor:
+                listaYDer.append(p)
+            else:
+                listaYIzq.append(p)
+
+        resultadoIzq = hayCarritosCerca(distancia, listaXIzq, listaYIzq)
+        resultadoDer = hayCarritosCerca(distancia, listaXDer, listaYDer)
+        
+        if resultadoIzq != False:
+            return resultadoIzq
+        
+        elif resultadoDer != False:
+            return resultadoDer
+        
+        else:
+            print("Aqui va el merge")
+            #return merge(distancia,listaY)
+##
+##def merge(distancia,divisor,listaY):
+##    
+##    YIzqCerca = quitarPuntosLejos(divisor, listaY)
+
+
+def quitarPuntosLejos(lista,divisor,distancia):
+    cercanos = []
+
+    for i in range(len(lista)):
+        if (abs(divisor-lista[i].x)) <= distancia:
+            cercanos.append(lista[i])
+
+    return cercanos
+
+
+m = puntosAlAzar(50)
+coorX = sorted(m)
+coorY = sorted(m, key=Punto.SortByY)
+
+carritosJerry(10, m)
