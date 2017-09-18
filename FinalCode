@@ -127,7 +127,6 @@ def problema(cuantosPuntos, distancia):
     print("Puntos generados:")
     for p in m:
         print(p, end=' ')
-    dibujaPuntos(m)
     r = carritosJerry(10, m)
     print("\nResultado:")
     if r != False:
